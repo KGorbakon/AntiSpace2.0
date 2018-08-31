@@ -7,7 +7,9 @@ score = 0
 extra_ability_waiting_time = 0
 power_supply = 5
 powers = []
-current_power = 5
+meteors_moving_time = 50
+add_meteor_time_1 = 750
+add_meteor_time_2 = 1500
 
 window_width = 450
 window_height = 700
@@ -86,7 +88,6 @@ def starter():
                 c.move(ship, 0, 10)
         if key.char == ' ':
             if power_supply > 0:
-                print(powers)
                 c.delete(powers[-1])
                 del powers[-1]
                 power_supply -= 1
@@ -189,9 +190,10 @@ def starter():
 
 
     def add_meteor():
+        global add_meteor_time_1, add_meteor_time_2
         meteor = c.create_image(random.randint(0, 410), -80, image=meteor_image, anchor=NW)
         meteors.append(meteor)
-        c.after(random.randint(750, 1500), add_meteor)
+        c.after(random.randint(add_meteor_time_1, add_meteor_time_2), add_meteor)
 
 
     def kollision_ship():
@@ -213,12 +215,21 @@ def starter():
                 meteors.remove(meteor)
         c.after(50, kollision_ship)
 
-
     def moving_meteors():
+        global meteors_moving_time
         for meteor in meteors:
             c.move(meteor, 0, 3)
-        c.after(50, moving_meteors)
+        c.after(meteors_moving_time, moving_meteors)
 
+    def accelerator():
+        global meteors_moving_time
+        global add_meteor_time_1, add_meteor_time_2
+        if meteors_moving_time > 1:
+            meteors_moving_time -= 1
+        if (meteors_moving_time < 30) and (add_meteor_time_1 > 160) and (add_meteor_time_2 > 320):
+            add_meteor_time_1 -= 10
+            add_meteor_time_2 -= 20
+        c.after(1500, accelerator)
 
     def GameOver():
         global hp
@@ -277,10 +288,10 @@ def starter():
                     break
         c.after(50, ShootingMeteors)
 
-
     tk.bind("<KeyPress>", knopki)
     add_meteor()
     moving_meteors()
+    accelerator()
     remove_bullets()
     kollision_ship()
     kollision_bonus_heart()
