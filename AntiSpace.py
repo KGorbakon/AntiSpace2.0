@@ -6,6 +6,7 @@ hp = 3
 score = 0
 extra_ability_waiting_time = 0
 power_supply = 5
+powers = []
 current_power = 5
 
 window_width = 450
@@ -17,9 +18,9 @@ c.pack()
 sky_image = ImageTk.PhotoImage(Image.open('images/sky.jpg').resize((window_width, window_height)))
 sky = c.create_image(0, 0, image=sky_image, anchor=NW)
 
-text = c.create_text(225, 100, text = 'AntiSpace', fill = 'white', font=('Courier',50))
-text2 = c.create_text(225, 150, text = 'press "Space" to begin', fill = 'white', font=('Courier',20))
-text3 = c.create_text(225, 200, text = 'press "E" to use ability', fill = 'white', font=('Courier',20))
+text = c.create_text(225, 100, text='AntiSpace', fill='white', font=('Courier', 50))
+text2 = c.create_text(225, 150, text='press "Space" to begin', fill='white', font=('Courier', 20))
+text3 = c.create_text(225, 200, text='press "E" to use ability', fill='white', font=('Courier', 20))
 
 ship_image = ImageTk.PhotoImage(Image.open('images/ship.gif').resize((60, 60)))
 
@@ -35,6 +36,7 @@ bonus_heart_image = ImageTk.PhotoImage(Image.open('images/heart.png').resize((60
 bonus_hearts = []
 
 power_square_image = ImageTk.PhotoImage(Image.open('images/power_square.png').resize((20, 20)))
+
 
 def starter():
     c.delete(text)
@@ -55,7 +57,7 @@ def starter():
 
     def score_plus():
         global score
-        score+=5
+        score += 5
         c.delete(SCORELabel)
         label_score()
         c.after(1000, score_plus)
@@ -84,27 +86,21 @@ def starter():
                 c.move(ship, 0, 10)
         if key.char == ' ':
             if power_supply > 0:
-                if current_power == 1:
-                    c.delete(power1)
-                if current_power == 2:
-                    c.delete(power2)
-                if current_power == 3:
-                    c.delete(power3)
-                if current_power == 4:
-                    c.delete(power4)
-                if current_power == 5:
-                    c.delete(power5)
+                print(powers)
+                c.delete(powers[-1])
+                del powers[-1]
                 power_supply -= 1
-                shipx, shipy = c.coords(ship)
-                get_bullet(shipx + 55/2, shipy - 20)
+                get_bullet(shipx + 55 / 2, shipy - 20)
+
         if key.char == 'e':
             if extra_ability_waiting_time == 0:
                 extra_ability_waiting_time = 20
                 c.delete(EALabel)
                 EATimer()
                 for i in range(0, 451, 1):
-                    get_bullet(i, shipy)        
-            
+                    get_bullet(i, shipy)
+
+
     def EATimer():
         global EALabel
         global extra_ability_waiting_time
@@ -114,78 +110,73 @@ def starter():
             c.delete(EALabel)
             label_ea()
 
+
     def EATimer_helper():
         global EALabel
         global extra_ability_waiting_time
         extra_ability_waiting_time -= 1
         c.delete(EALabel)
-        EALabel = c.create_text(150, 10, width=300, text="Extra ability ready in: " + str(extra_ability_waiting_time), fill='#fff', anchor=NW)
+        EALabel = c.create_text(150, 10, width=300, text="Extra ability ready in: " + str(extra_ability_waiting_time),
+                                fill='#fff', anchor=NW)
         EATimer()
 
-    def power_bar():
+    def power_condition():
         global power_supply
-        if (power_supply >= 1) and (power1 != c.create_image(10, 665, image=power_square_image, anchor=NW)):
-            power1 = c.create_image(10, 665, image=power_square_image, anchor=NW)
-            powers.append(power1)
-        if (power_supply >= 2) and (power2 != c.create_image(10, 640, image=power_square_image, anchor=NW)):
-            power2 = c.create_image(10, 640, image=power_square_image, anchor=NW)
-            powers.append(power2)
-        if (power_supply >= 3) and (power3 != c.create_image(10, 615, image=power_square_image, anchor=NW)):
-            power3 = c.create_image(10, 615, image=power_square_image, anchor=NW)
-            powers.append(power3)
-        if (power_supply >= 4) and (power4 != c.create_image(10, 590, image=power_square_image, anchor=NW)):
-            power4 = c.create_image(10, 590, image=power_square_image, anchor=NW)
-            powers.append(power4)
-        if (power_supply == 5) and (power5 != c.create_image(10, 565, image=power_square_image, anchor=NW)):
-            power5 = c.create_image(10, 565, image=power_square_image, anchor=NW)
-            powers.append(power5)
-
-    def current_power_meter():
-        global current_power
-        global power_supply
+        global powers
         if power_supply == 1:
-            current_power = power1
+             power1 = c.create_image(10, 665, image=power_square_image, anchor=NW)
+             powers += [power1]
         if power_supply == 2:
-            current_power = power2
+             power2 = c.create_image(10, 640, image=power_square_image, anchor=NW)
+             powers += [power2]
         if power_supply == 3:
-            current_power = power3
+             power3 = c.create_image(10, 615, image=power_square_image, anchor=NW)
+             powers += [power3]
         if power_supply == 4:
-            current_power = power4
+             power4 = c.create_image(10, 590, image=power_square_image, anchor=NW)
+             powers += [power4]
         if power_supply == 5:
-            current_power = power5
-        c.after(50, current_power_meter)
+             power5 = c.create_image(10, 565, image=power_square_image, anchor=NW)
+             powers += [power5]
 
     def powers_creator():
+        global powers
         power1 = c.create_image(10, 665, image=power_square_image, anchor=NW)
         power2 = c.create_image(10, 640, image=power_square_image, anchor=NW)
         power3 = c.create_image(10, 615, image=power_square_image, anchor=NW)
         power4 = c.create_image(10, 590, image=power_square_image, anchor=NW)
         power5 = c.create_image(10, 565, image=power_square_image, anchor=NW)
+        powers += [power1, power2, power3, power4, power5]
+
 
     def power_generator():
         global power_supply
         if power_supply < 5:
             power_supply += 1
-            power_bar()
+            power_condition()
         c.after(2000, power_generator)
 
+
     def add_bonus_heart():
-        bonus_heart = c.create_image(random.randint(0,390), random.randint(0, 240), image=bonus_heart_image, anchor=NW)
+        bonus_heart = c.create_image(random.randint(0, 390), random.randint(0, 240), image=bonus_heart_image, anchor=NW)
         bonus_hearts.append(bonus_heart)
         c.after(20000, add_bonus_heart)
+
 
     def pickup_bonus_heart():
         global hp
         shipx, shipy = c.coords(ship)
         for bonus_heart in bonus_hearts:
             bonus_heartx, bonus_hearty = c.coords(bonus_heart)
-            if (bonus_hearty+60>shipy) and (bonus_hearty<shipy+60) and (bonus_heartx+60>shipx) and (bonus_heartx<shipx+60):
+            if (bonus_hearty + 60 > shipy) and (bonus_hearty < shipy + 60) and (bonus_heartx + 60 > shipx) and (
+                bonus_heartx < shipx + 60):
                 c.delete(bonus_heart)
-                hp+=1
+                hp += 1
                 c.delete(HPLabel)
                 label_hp()
                 bonus_hearts.remove(bonus_heart)
         c.after(50, pickup_bonus_heart)
+
 
     def remove_bullets():
         for bullet in bullets:
@@ -196,10 +187,12 @@ def starter():
                 bullets.remove(bullet)
         c.after(5, remove_bullets)
 
+
     def add_meteor():
         meteor = c.create_image(random.randint(0, 410), -80, image=meteor_image, anchor=NW)
         meteors.append(meteor)
         c.after(random.randint(750, 1500), add_meteor)
+
 
     def kollision_ship():
         global hp
@@ -220,10 +213,12 @@ def starter():
                 meteors.remove(meteor)
         c.after(50, kollision_ship)
 
+
     def moving_meteors():
         for meteor in meteors:
             c.move(meteor, 0, 3)
         c.after(50, moving_meteors)
+
 
     def GameOver():
         global hp
@@ -235,23 +230,27 @@ def starter():
             c.create_text(110, 325, width=500, text="Game over", fill='#FF0000', anchor=NW, font=("Courier", 44))
             c.after(3000, lambda: exit())
 
+
     def kollision_bonus_heart():
         for i, bonus_heart in enumerate(bonus_hearts):
             for j, meteor in enumerate(meteors):
                 bonus_heartx, bonus_hearty = c.coords(bonus_heart)
                 meteorx, meteory = c.coords(meteor)
-                if (meteory + 80 > bonus_hearty) and (meteory < bonus_hearty + 60) and (meteorx + 40 > bonus_heartx) and (meteorx < bonus_heartx + 60):
+                if (meteory + 80 > bonus_hearty) and (meteory < bonus_hearty + 60) and (meteorx + 40 > bonus_heartx) and (
+                    meteorx < bonus_heartx + 60):
                     c.delete(bonus_heart)
                     bonus_hearts.pop(i)
                     break
         c.after(50, kollision_bonus_heart)
+
 
     def ShootingBonusHearts():
         for i, bullet in enumerate(bullets):
             for j, bonus_heart in enumerate(bonus_hearts):
                 bulletx, bullety = c.coords(bullet)
                 bonus_heartx, bonus_hearty = c.coords(bonus_heart)
-                if (bonus_hearty + 60 > bullety) and (bonus_hearty < bullety + 30) and (bonus_heartx + 60 > bulletx) and (bonus_heartx < bulletx + 5):
+                if (bonus_hearty + 60 > bullety) and (bonus_hearty < bullety + 30) and (bonus_heartx + 60 > bulletx) and (
+                    bonus_heartx < bulletx + 5):
                     c.delete(bullet)
                     c.delete(bonus_heart)
                     bullets.pop(i)
@@ -259,22 +258,25 @@ def starter():
                     break
         c.after(50, ShootingBonusHearts)
 
+
     def ShootingMeteors():
         global score
         for i, bullet in enumerate(bullets):
             for j, meteor in enumerate(meteors):
                 bulletx, bullety = c.coords(bullet)
                 meteorx, meteory = c.coords(meteor)
-                if (meteory + 80 > bullety) and (meteory < bullety + 30) and (meteorx + 40 > bulletx) and (meteorx < bulletx + 5):
+                if (meteory + 80 > bullety) and (meteory < bullety + 30) and (meteorx + 40 > bulletx) and (
+                    meteorx < bulletx + 5):
                     c.delete(bullet)
                     c.delete(meteor)
                     meteors.pop(j)
                     bullets.pop(i)
-                    score+=10
+                    score += 10
                     c.delete(SCORELabel)
                     label_score()
                     break
         c.after(50, ShootingMeteors)
+
 
     tk.bind("<KeyPress>", knopki)
     add_meteor()
@@ -286,15 +288,18 @@ def starter():
     label_score()
     label_ea()
     powers_creator()
-    current_power_meter()
     power_generator()
     score_plus()
     ShootingMeteors()
     add_bonus_heart()
     pickup_bonus_heart()
     ShootingBonusHearts()
+
+
 def SummonStarter(key):
     if key.char == ' ':
         starter()
+
+
 tk.bind("<KeyPress>", SummonStarter)
 mainloop()
