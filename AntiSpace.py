@@ -21,8 +21,7 @@ sky_image = ImageTk.PhotoImage(Image.open('images/sky.jpg').resize((window_width
 sky = c.create_image(0, 0, image=sky_image, anchor=NW)
 
 text = c.create_text(225, 100, text='AntiSpace', fill='white', font=('Courier', 50))
-text2 = c.create_text(225, 150, text='press "Space" to begin', fill='white', font=('Courier', 20))
-text3 = c.create_text(225, 200, text='press "E" to use ability', fill='white', font=('Courier', 20))
+text2 = c.create_text(445/2, 150, text='press "Space" to begin', fill='white', font=('Courier', 20))
 
 ship_image = ImageTk.PhotoImage(Image.open('images/ship.gif').resize((60, 60)))
 
@@ -43,7 +42,6 @@ power_square_image = ImageTk.PhotoImage(Image.open('images/power_square.png').re
 def starter():
     c.delete(text)
     c.delete(text2)
-    c.delete(text3)
 
     def label_hp():
         global HPLabel
